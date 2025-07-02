@@ -64,7 +64,8 @@ DECLARE_PER_CPU(struct irq_handle_status, softirq_note);
 		time = sched_clock(); \
 } while (0)
 
-#define __check_process_time(msg, ts, ...) do { \
+#define __check_process_time(msg, _ts, ...) do { \
+	unsigned long long ts = _ts; \
 	unsigned long long te = sched_clock(); \
 	unsigned long long t_diff = te - ts; \
 					\
@@ -88,7 +89,9 @@ DECLARE_PER_CPU(struct irq_handle_status, softirq_note);
 		__check_process_time(msg, ts, ##__VA_ARGS__); \
 } while (0)
 
-#define check_preempt_count(count, msg, ...) do { \
+#define check_preempt_count(_count, msg, ...) do { \
+	int count = _count; \
+	\
 	if (count != preempt_count()) { \
 		char msg_str[128]; \
 				\
@@ -110,7 +113,8 @@ DECLARE_PER_CPU(struct irq_handle_status, softirq_note);
 	} \
 } while (0)
 
-#define __check_process_time_preempt(type, count, msg, ts, ...) do { \
+#define __check_process_time_preempt(type, count, msg, _ts, ...) do { \
+	unsigned long long ts = _ts; \
 	unsigned long long te = sched_clock(); \
 	unsigned long long t_diff = te - ts; \
 					\

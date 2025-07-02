@@ -89,7 +89,6 @@ enum IMGSENSOR_RETURN imgsensor_oc_interrupt(
 	enum IMGSENSOR_SENSOR_IDX sensor_idx, bool enable)
 {
 	int i = 0;
-	int ret = 0;
 
 	mutex_lock(&oc_mutex);
 	if (enable) {

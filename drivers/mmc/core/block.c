@@ -47,7 +47,6 @@
 
 #include <linux/uaccess.h>
 
-#include "mtk_mmc_block.h"
 #include "queue.h"
 #include "block.h"
 #include "core.h"
@@ -2240,14 +2239,12 @@ static int mmc_blk_mq_issue_rw_rq(struct mmc_queue *mq,
 	err = mmc_blk_rw_wait(mq, &prev_req);
 	if (err)
 		goto out_post_req;
-	mt_biolog_mmcqd_req_end(mqrq->brq.mrq.data);
 
 	mq->rw_wait = true;
 	err = mmc_start_request(host, &mqrq->brq.mrq);
 
 	if (prev_req)
 		mmc_blk_mq_post_req(mq, prev_req);
-	mt_biolog_mmcqd_req_start(host);
 
 	if (err)
 		mq->rw_wait = false;
@@ -2323,7 +2320,6 @@ static int mmc_blk_swcq_issue_rw_rq(struct mmc_queue *mq,
 	else
 		return -EBUSY;
 
-	mt_biolog_mmcqd_req_check();
 	mq->mqrq[index].req = req;
 	atomic_set(&mqrq->index, index + 1);
 	atomic_set(&mq->mqrq[index].index, index + 1);
@@ -3247,7 +3243,7 @@ static int __init mmc_blk_init(void)
 	res = mmc_register_driver(&mmc_driver);
 	if (res)
 		goto out_blkdev_unreg;
-	mt_mmc_biolog_init();
+
 	return 0;
 
 out_blkdev_unreg:

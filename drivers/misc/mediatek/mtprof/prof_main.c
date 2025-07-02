@@ -37,7 +37,6 @@
 		}						\
 	} while (0)
 
-#define SIGNAL_DELIVER_RES_LEN 5
 static const char * const signal_deliver_results[] = {
 	"delivered",
 	"ignored",
@@ -72,7 +71,7 @@ static void probe_signal_generate(void *ignore, int sig, struct siginfo *info,
 	 */
 	STORE_SIGINFO(errno, code, info);
 
-	if (result < 0 || result >= SIGNAL_DELIVER_RES_LEN)
+	if (result < 0 || result >= sizeof(signal_deliver_results))
 		res_state = false;
 
 	printk_deferred("[signal][%d:%s]generate sig %d to [%d:%s:%c] errno=%d code=%d grp=%d res=%s\n",

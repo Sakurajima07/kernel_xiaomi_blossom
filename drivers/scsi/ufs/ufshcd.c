@@ -6300,9 +6300,6 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
 	}
 
 	ufshcd_hold(hba, false);
-	dev_info(hba->dev,
-		"abort: tag %d, cmd 0x%x\n", tag, (int)cmd->cmnd[0]);
-
 	reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
 	/* If command is already aborted/completed, return SUCCESS */
 	if (!(test_bit(tag, &hba->outstanding_reqs))) {

@@ -10026,8 +10026,6 @@ static signed int ISP_probe(struct platform_device *pDev)
 	struct device *dev = NULL;
 #endif
 
-	pr_info("- E. ISP driver probe.\n");
-
 	/* Get platform_device parameters */
 #ifdef CONFIG_OF
 
@@ -10079,10 +10077,6 @@ static signed int ISP_probe(struct platform_device *pDev)
 		return -ENOMEM;
 	}
 
-	pr_info("nr_isp_devs=%d, devnode(%s), map_addr=0x%lx\n",
-		nr_isp_devs, pDev->dev.of_node->name,
-		(unsigned long)isp_dev->regs);
-
 	/* get IRQ ID and request IRQ */
 	isp_dev->irq = irq_of_parse_and_map(pDev->dev.of_node, 0);
 
@@ -10112,12 +10106,6 @@ static signed int ISP_probe(struct platform_device *pDev)
 					);
 					return Ret;
 				}
-
-				pr_info(
-					"nr_isp_devs=%d, devnode(%s), irq=%d, ISR: %s\n",
-					nr_isp_devs, pDev->dev.of_node->name,
-					isp_dev->irq,
-					IRQ_CB_TBL[i].device_name);
 				break;
 			}
 		}
@@ -10358,8 +10346,6 @@ EXIT:
 			ISP_UnregCharDev();
 
 	}
-
-	pr_info("- X. ISP driver probe.\n");
 
 	return Ret;
 }
@@ -11207,7 +11193,6 @@ static signed int __init ISP_Init(void)
 				     "mediatek,smi_larb%d", i) < 0) {
 				pr_info("[Error] snprintf failed\n");
 			}
-			pr_info("Finding SMI_LARB compatible: %s\n", comp_str);
 
 			node = of_find_compatible_node(NULL, NULL, comp_str);
 			if (!node) {
@@ -11220,7 +11205,6 @@ static signed int __init ISP_Init(void)
 				pr_err("unable to map ISP_SENINF0_BASE registers!!!\n");
 				break;
 			}
-			pr_info("SMI_LARB%d_BASE: %p\n", i, SMI_LARB_BASE[i]);
 		}
 
 		/* if (comp_str) coverity: no need if, kfree is safe */
@@ -11237,7 +11221,6 @@ static signed int __init ISP_Init(void)
 		pr_err("unable to map ISP_SENINF0_BASE registers!!!\n");
 		return -ENODEV;
 	}
-	pr_info("ISP_SENINF0_BASE: %p\n", ISP_SENINF0_BASE);
 
 	node = of_find_compatible_node(NULL, NULL, "mediatek,seninf2");
 	if (!node) {
@@ -11249,7 +11232,6 @@ static signed int __init ISP_Init(void)
 		pr_err("unable to map ISP_SENINF1_BASE registers!!!\n");
 		return -ENODEV;
 	}
-	pr_info("ISP_SENINF1_BASE: %p\n", ISP_SENINF1_BASE);
 
 	node = of_find_compatible_node(NULL, NULL, "mediatek,seninf3");
 	if (!node) {
@@ -11261,7 +11243,6 @@ static signed int __init ISP_Init(void)
 		pr_err("unable to map ISP_SENINF2_BASE registers!!!\n");
 		return -ENODEV;
 	}
-	pr_info("ISP_SENINF2_BASE: %p\n", ISP_SENINF2_BASE);
 
 	node = of_find_compatible_node(NULL, NULL, "mediatek,seninf4");
 	if (!node) {
@@ -11273,7 +11254,6 @@ static signed int __init ISP_Init(void)
 		pr_err("unable to map ISP_SENINF3_BASE registers!!!\n");
 		return -ENODEV;
 	}
-	pr_info("ISP_SENINF3_BASE: %p\n", ISP_SENINF3_BASE);
 
 	node = of_find_compatible_node(NULL, NULL, "mediatek,mt6765-apmixedsys");
 	if (!node) {
@@ -11285,7 +11265,6 @@ static signed int __init ISP_Init(void)
 		pr_err("unable to map CLOCK_CELL_BASE registers!!!\n");
 		return -ENODEV;
 	}
-	pr_info("CLOCK_CELL_BASE: %p\n", CLOCK_CELL_BASE);
 
 	node = of_find_compatible_node(NULL, NULL, "mediatek,mmsys_config");
 	if (!node) {
@@ -11297,7 +11276,6 @@ static signed int __init ISP_Init(void)
 		pr_err("unable to map ISP_MMSYS_CONFIG_BASE registers!!!\n");
 		return -ENODEV;
 	}
-	pr_info("ISP_MMSYS_CONFIG_BASE: %p\n", ISP_MMSYS_CONFIG_BASE);
 
 	/* FIX-ME: linux-3.10 procfs API changed */
 	proc_create("driver/isp_reg", 0444, NULL, &fcameraisp_proc_fops);
@@ -11410,31 +11388,25 @@ static signed int __init ISP_Init(void)
 
 #ifndef EP_CODE_MARK_CMDQ
 	/* Register ISP callback */
-	pr_info("register isp callback for MDP");
 	cmdqCoreRegisterCB(CMDQ_GROUP_ISP,
 			   ISP_MDPClockOnCallback,
 			   ISP_MDPDumpCallback,
 			   ISP_MDPResetCallback,
 			   ISP_MDPClockOffCallback);
 	/* Register GCE callback for dumping ISP register */
-	pr_info("register isp callback for GCE");
 	cmdqCoreRegisterDebugRegDumpCB(ISP_BeginGCECallback,
 				ISP_EndGCECallback);
 #endif
 	/* m4u_enable_tf(M4U_PORT_CAM_IMGI, 0);*/
 
 #ifdef _MAGIC_NUM_ERR_HANDLING_
-	pr_info("init m_LastMNum");
 	for (i = 0; i < _cam_max_; i++)
 		m_LastMNum[i] = 0;
 
 #endif
-
-
 	for (i = 0; i < ISP_DEV_NODE_NUM; i++)
 		SuspnedRecord[i] = 0;
 
-	pr_info("- X. Ret: %d.", Ret);
 	return Ret;
 }
 

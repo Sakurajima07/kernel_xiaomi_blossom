@@ -8,6 +8,8 @@ tar -zxf a.tar.gz
 
 export PATH="${dir}/bin:/usr/bin:${PATH}"
 
+cd ..
+
 make -j$(nproc --all) O=out CC=clang LD=ld.lld ARCH=arm64 SUBARCH=arm64 ${defconfig}
 make -j$(nproc --all) O=out \
   CROSS_COMPILE="aarch64-linux-gnu-" \

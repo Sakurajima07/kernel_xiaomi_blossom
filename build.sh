@@ -8,8 +8,8 @@ tar -zxf a.tar.gz
 
 export PATH="${dir}/bin:/usr/bin:${PATH}"
 
-make -j$NJOBS O=out CC=clang LD=ld.lld ARCH=arm64 SUBARCH=arm64 ${defconfig}
-make -j$NJOBS O=out \
+make -j$(nproc --all) O=out CC=clang LD=ld.lld ARCH=arm64 SUBARCH=arm64 ${defconfig}
+make -j$(nproc --all) O=out \
   CROSS_COMPILE="aarch64-linux-gnu-" \
   CROSS_COMPILE_ARM32="arm-linux-gnueabi-" \
   CROSS_COMPILE_COMPAT="arm-linux-gnueabi-" \

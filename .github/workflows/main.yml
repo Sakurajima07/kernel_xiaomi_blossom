@@ -35,7 +35,7 @@ jobs:
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
             git build-essential bc bison flex \
             libssl-dev libelf-dev zlib1g-dev \
-            clang lld llvm gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi \
+            lld llvm gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi \
             python3 python3-pip ninja-build zip ccache
           sudo ln -sf /usr/bin/ld.lld /usr/bin/ld || true
           echo "VERSION=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL' Makefile | awk '{print $3}' | paste -sd. - | sed 's/\.\(-.*\)/\1/')" >> $GITHUB_ENV
@@ -57,16 +57,8 @@ jobs:
           mkdir -p out
           START=$(date +%s)
 
-          {
             echo "### Kernel Build Started: $(date)"
-            make O=out ARCH=$ARCH CC="ccache clang" ${DEFCONFIG}_defconfig
-            make -j$(nproc) O=out ARCH=$ARCH CC="ccache clang" \
-              CROSS_COMPILE=aarch64-linux-gnu- \
-              CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-              AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy \
-              OBJDUMP=llvm-objdump STRIP=llvm-strip \
-              LD=ld.lld LLVM_IAS=1
-          } 2>&1 | tee build.log
+            ./build.sh
 
           END=$(date +%s)
           echo "BUILD_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV

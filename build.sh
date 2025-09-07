@@ -1,0 +1,31 @@
+#!/bin/bash
+
+export dir="clang"
+mkdir ${dir} && cd ${dir}
+
+curl -Lo a.tar.gz "https://github.com/erabye/shattered-clang/releases/download/shattered-Clang-15.0.7/shattered-Clang-15.0.7.tar.gz"
+tar -zxf a.tar.gz
+
+export PATH="${dir}/bin:/usr/bin:${PATH}"
+
+cd ..
+
+make O=out CC=clang ARCH=$ARCH ${DEFCONFIG}_defconfig
+make -j$(nproc --all) O=out \
+  CROSS_COMPILE="aarch64-linux-gnu-" \
+  CROSS_COMPILE_ARM32="arm-linux-gnueabi-" \
+  CROSS_COMPILE_COMPAT="arm-linux-gnueabi-" \
+  CC=clang \
+  LD=ld.lld \
+  NM=llvm-nm \
+  AR=llvm-ar \
+  STRIP=llvm-strip \
+  OBJCOPY=llvm-objcopy \
+  OBJDUMP=llvm-objdump \
+  READELF=llvm-readelf \
+  LLVM_IAS=1 \
+  HOSTCC=clang \
+  HOSTCXX=clang++ \
+  HOSTLD=ld.lld \
+  HOSTAR=llvm-ar \
+  2>&1 | tee build.log

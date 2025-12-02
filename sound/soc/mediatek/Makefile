@@ -10,7 +10,7 @@ ifeq ($(CONFIG_SND_SOC_MT6779_MT6359),m)
 subdir-ccflags-y += -DASOC_TEMP_BYPASS
 endif
 obj-$(CONFIG_SND_SOC_MTK_BTCVSD) += common/
-obj-$(CONFIG_MTK_AUDIO_TUNNELING_SUPPORT) += common_int/
+# obj-$(CONFIG_MTK_AUDIO_TUNNELING_SUPPORT) += common_int/
 obj-$(CONFIG_SND_SOC_MEDIATEK) += common/
 obj-$(CONFIG_SND_SOC_MT2701) += mt2701/
 obj-$(CONFIG_SND_SOC_MT6797) += mt6797/
